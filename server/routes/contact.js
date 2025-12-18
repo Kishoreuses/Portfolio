@@ -1,0 +1,125 @@
+const express = require('express');
+const router = express.Router();
+const Contact = require('../models/Contact');
+const contactUpload = require('../middleware/contactUpload');
+const nodemailer = require('nodemailer');
+const path = require('path');
+const fs = require('fs');
+
+// Create nodemailer transporter
+const createTransporter = () => {
+  return nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD
+    }
+  });
+};
+
+// Submit contact form with file attachments
+router.post('/', contactUpload.array('attachments', 5), async (req, res) => {
+  try {
+    const { name, email, subject, message } = req.body;
+    const attachments = req.files || [];
+
+    // Save to database
+    const contactData = {
+      name,
+      email,
+      subject,
+      message,
+      attachments: attachments.map(file => ({
+        filename: file.originalname,
+        path: file.path
+      }))
+    };
+
+    const contact = new Contact(contactData);
+    await contact.save();
+
+    // Send email with attachments
+    try {
+      const transporter = createTransporter();
+      const recipientEmail = process.env.RECIPIENT_EMAIL || process.env.EMAIL_USER;
+
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: recipientEmail,
+        replyTo: email,
+        subject: `Portfolio Contact: ${subject}`,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #7c5aff; border-bottom: 2px solid #7c5aff; padding-bottom: 10px;">
+              New Contact Form Submission
+            </h2>
+            <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <p><strong>Name:</strong> ${name}</p>
+              <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+              <p><strong>Subject:</strong> ${subject}</p>
+            </div>
+            <div style="background: #ffffff; padding: 20px; border-radius: 8px; border-left: 4px solid #7c5aff;">
+              <h3 style="color: #333; margin-top: 0;">Message:</h3>
+              <p style="color: #666; line-height: 1.6; white-space: pre-wrap;">${message}</p>
+            </div>
+            ${attachments.length > 0 ? `
+              <div style="margin-top: 20px; padding: 15px; background: #f0f0f0; border-radius: 8px;">
+                <strong>Attachments (${attachments.length}):</strong>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                  ${attachments.map(file => `<li>${file.originalname}</li>`).join('')}
+                </ul>
+              </div>
+            ` : ''}
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd; color: #999; font-size: 12px;">
+              <p>This email was sent from your portfolio contact form.</p>
+              <p>Reply directly to this email to respond to ${name}.</p>
+            </div>
+          </div>
+        `,
+        attachments: attachments.map(file => ({
+          filename: file.originalname,
+          path: file.path
+        }))
+      };
+
+      await transporter.sendMail(mailOptions);
+      console.log('Contact email sent successfully');
+    } catch (emailError) {
+      console.error('Error sending email:', emailError);
+      // Don't fail the request if email fails, just log it
+    }
+
+    res.json({ message: 'Message sent successfully!', contact });
+  } catch (error) {
+    // Clean up uploaded files if there's an error
+    if (req.files) {
+      req.files.forEach(file => {
+        if (fs.existsSync(file.path)) {
+          fs.unlinkSync(file.path);
+        }
+      });
+    }
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// Get all messages (admin)
+router.get('/', async (req, res) => {
+  try {
+    const messages = await Contact.find().sort({ createdAt: -1 });
+    res.json(messages);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+module.exports = router;
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,17 @@
+For github : https://github.com/Kishoreuses
+For Linkedin: http://www.linkedin.com/in/kishoreuses
+email: kishoreuses@gmail.com
+
+
+projects
+Earth Movers: https://github.com/Kishoreuses/EarthMovers-APP-Consutancy
+description: Earthmovers is a Mobile application for customers to delivery the constrution materials like Sand,Bricks,etc.. And also customer has renting the vehicles like JCB, Tractor, Lorry for thier own purpose like farming, construction etc..
+
+Mentor Connect: https://github.com/Kishoreuses/SIH-Mentor-Connect-PID1630
+description: This is a mobile application that provides the connection between Mentors(IT professionals, Institute lecturers, IT employees) and Mentees(Students, job seekers, skill learners).Mentors had training thier mentees for thier career growth for job seekers, students.
+
+BikeHouse: https://github.com/Kishoreuses/FULLSTACK-BIKEHOUSE
+decription: Users have buy and sell thier secon hand bikes like olx platform
+
+PyEval: 
+Description: It is the web portal for training and testing thier Python programs With AI feedback. Also it is like google classroom faculty can create the class and assign the programs and students can finish and submit the programs
