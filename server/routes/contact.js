@@ -28,14 +28,33 @@ const sendEmailViaResend = async (mailOptions) => {
   // Prepare attachments for Resend API
   const resendAttachments = [];
   if (mailOptions.attachments && mailOptions.attachments.length > 0) {
+    console.log(`Processing ${mailOptions.attachments.length} attachment(s)...`);
     for (const attachment of mailOptions.attachments) {
       try {
         const fileContent = fs.readFileSync(attachment.path);
         const base64Content = fileContent.toString('base64');
+
+        // Detect content type from file extension
+        const ext = path.extname(attachment.filename).toLowerCase();
+        const contentTypeMap = {
+          '.pdf': 'application/pdf',
+          '.doc': 'application/msword',
+          '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+          '.jpg': 'image/jpeg',
+          '.jpeg': 'image/jpeg',
+          '.png': 'image/png',
+          '.gif': 'image/gif',
+          '.txt': 'text/plain',
+          '.zip': 'application/zip'
+        };
+        const contentType = contentTypeMap[ext] || 'application/octet-stream';
+
         resendAttachments.push({
           filename: attachment.filename,
-          content: base64Content
+          content: base64Content,
+          type: contentType
         });
+        console.log(`Attached: ${attachment.filename} (${contentType}, ${fileContent.length} bytes)`);
       } catch (err) {
         console.error(`Failed to read attachment ${attachment.filename}:`, err);
       }
@@ -53,6 +72,7 @@ const sendEmailViaResend = async (mailOptions) => {
   // Only add attachments if there are any
   if (resendAttachments.length > 0) {
     payload.attachments = resendAttachments;
+    console.log(`Sending email with ${resendAttachments.length} attachment(s)`);
   }
 
   const response = await fetch('https://api.resend.com/emails', {
@@ -69,7 +89,9 @@ const sendEmailViaResend = async (mailOptions) => {
     throw new Error(`Resend API error: ${error}`);
   }
 
-  return await response.json();
+  const result = await response.json();
+  console.log('Email sent successfully via Resend:', result);
+  return result;
 };
 
 // Submit contact form with file attachments
