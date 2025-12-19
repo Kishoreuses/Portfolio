@@ -32,16 +32,18 @@ Add these to your Render Dashboard under the **Environment** tab:
 > **Render blocks SMTP connections**, so you MUST use an API-based email service like Resend.
 
 - `RESEND_API_KEY`: Your Resend API key
-- `RESEND_FROM_EMAIL`: Your verified sender email (e.g., `contact@yourdomain.com`)
-- `RECIPIENT_EMAIL`: Email where you want to receive contact form messages
+- `RECIPIENT_EMAIL`: `kishoreuses@gmail.com` (MUST be the email you signed up to Resend with)
+
+> [!WARNING]
+> **Resend Testing Limitation**: With the free tier and default sender (`onboarding@resend.dev`), you can ONLY receive emails at the address you used to sign up for Resend. Make sure `RECIPIENT_EMAIL` matches your Resend account email.
 
 **How to set up Resend:**
-1. Go to [resend.com](https://resend.com) and create a free account
+1. Go to [resend.com](https://resend.com) and sign up with `kishoreuses@gmail.com`
 2. Verify your email address
 3. Go to **API Keys** and create a new API key
 4. Copy the API key and add it as `RESEND_API_KEY` in Render
-5. For testing, you can use `onboarding@resend.dev` as `RESEND_FROM_EMAIL`
-6. For production, add your own domain in Resend and verify it
+5. Add `RECIPIENT_EMAIL` as `kishoreuses@gmail.com` in Render
+6. For production with custom domains, add your domain in Resend and verify it
 
 #### Option 2: Gmail SMTP (Only for Local Development)
 > [!WARNING]

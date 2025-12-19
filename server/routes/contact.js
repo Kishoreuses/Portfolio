@@ -25,19 +25,43 @@ const sendEmailViaResend = async (mailOptions) => {
     throw new Error('RESEND_API_KEY not configured');
   }
 
+  // Prepare attachments for Resend API
+  const resendAttachments = [];
+  if (mailOptions.attachments && mailOptions.attachments.length > 0) {
+    for (const attachment of mailOptions.attachments) {
+      try {
+        const fileContent = fs.readFileSync(attachment.path);
+        const base64Content = fileContent.toString('base64');
+        resendAttachments.push({
+          filename: attachment.filename,
+          content: base64Content
+        });
+      } catch (err) {
+        console.error(`Failed to read attachment ${attachment.filename}:`, err);
+      }
+    }
+  }
+
+  const payload = {
+    from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
+    to: [mailOptions.to],
+    reply_to: mailOptions.replyTo,
+    subject: mailOptions.subject,
+    html: mailOptions.html
+  };
+
+  // Only add attachments if there are any
+  if (resendAttachments.length > 0) {
+    payload.attachments = resendAttachments;
+  }
+
   const response = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${RESEND_API_KEY}`,
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({
-      from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
-      to: [mailOptions.to],
-      reply_to: mailOptions.replyTo,
-      subject: mailOptions.subject,
-      html: mailOptions.html
-    })
+    body: JSON.stringify(payload)
   });
 
   if (!response.ok) {
