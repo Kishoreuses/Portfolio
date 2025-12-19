@@ -47,27 +47,29 @@ const Education = () => {
     const baseUrl = BASE_URL;
     return `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
   };
-  const deduped = [];
-  const seen = new Set();
-  let hscFound = false;
+  // Deduplication logic: allow only one entry per education level
+  const uniqueLevels = new Map();
 
   education.forEach((edu) => {
     const degreeName = normalize(edu.degree);
-    const institutionName = normalize(edu.institution);
+    let levelKey = degreeName; // Default key
 
-    // Special handling for HSC duplicates - only keep the FIRST HSC entry found
-    if (degreeName.includes('hsc')) {
-      if (hscFound) {
-        return; // Skip any additional HSC entries
-      }
-      hscFound = true;
+    // Identify education level
+    if (degreeName.includes('msc') || degreeName.includes('master') || degreeName.includes('btech') || degreeName.includes('be ')) {
+      levelKey = 'pg_ug';
+    } else if (degreeName.includes('hsc') || degreeName.includes('higher secondary') || degreeName.includes('12th')) {
+      levelKey = 'hsc';
+    } else if (degreeName.includes('sslc') || degreeName.includes('secondary') || degreeName.includes('10th')) {
+      levelKey = 'sslc';
     }
 
-    const key = `${degreeName}|${institutionName}`;
-    if (seen.has(key)) return;
-    seen.add(key);
-    deduped.push(edu);
+    // Only add if we haven't seen this level yet
+    if (!uniqueLevels.has(levelKey)) {
+      uniqueLevels.set(levelKey, edu);
+    }
   });
+
+  const deduped = Array.from(uniqueLevels.values());
 
   return (
     <section id="education" className="section education">
