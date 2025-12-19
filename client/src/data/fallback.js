@@ -90,6 +90,13 @@ export const fallbackEducation = [
     logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4mtbllX145Nn1TG0tg0787skL9pahigj9jA&s',
   },
   {
+    degree: 'HSC (2022)',
+    institution: 'Nandhi Matric. Higher Secondary School, Erode',
+    period: '94.2%',
+    description: 'Specialized in Computer Science and Mathematics.',
+    logo: 'https://img.icons8.com/color/96/school-building.png',
+  },
+  {
     degree: 'SSLC (2020)',
     institution: 'Nandhi Matric. Higher Secondary School, Erode',
     period: '86.6%',

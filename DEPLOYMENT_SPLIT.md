@@ -24,6 +24,17 @@ Add these to your Render Dashboard under the **Environment** tab:
 - `JWT_SECRET`: *Your secret key* (Keep this private)
 - `FRONTEND_URL`: `https://kishoreportfolio-fawn.vercel.app`
 - `PORT`: `5000`
+- `EMAIL_USER`: *Your Gmail address* (e.g., `yourname@gmail.com`)
+- `EMAIL_PASSWORD`: *Your Gmail App Password* (NOT your regular password - see below)
+- `RECIPIENT_EMAIL`: *Email where you want to receive contact form messages* (defaults to `EMAIL_USER` if not set)
+
+> [!IMPORTANT]
+> **Gmail App Password Setup**: You MUST use an App Password, not your regular Gmail password.
+> 1. Go to [Google Account Security](https://myaccount.google.com/security)
+> 2. Enable **2-Step Verification** if not already enabled
+> 3. Go to **App Passwords** (search for it in settings)
+> 4. Generate a new app password for "Mail"
+> 5. Copy the 16-character password and use it as `EMAIL_PASSWORD`
 
 ---
 
@@ -35,6 +46,24 @@ Add this to your Vercel Project Settings under **Environment Variables**:
 
 > [!TIP]
 > After setting `REACT_APP_API_URL`, Vercel will automatically redeploy (or you should trigger a new deployment) to apply the change. Once applied, your portfolio will connect to the live backend instead of `localhost`.
+
+---
+
+## 3. Common Errors & Fixes
+
+### ❌ Server error: 404 (Login failed)
+This happens if your **Vercel** environment variable is pointing to the wrong place.
+**Correct Value**: `https://your-backend-name.onrender.com/api`
+**Incorrect Value**: `https://your-portfolio-vercel-url.vercel.app/api` (Do NOT point it to itself!)
+
+### ❌ Network Error
+- Make sure your Render backend is actually "Live" (check Render dashboard).
+- Check that `FRONTEND_URL` in Render matches your Vercel URL exactly.
+
+### ❌ Contact form says "sent" but no email arrives
+- Check that `EMAIL_USER`, `EMAIL_PASSWORD`, and `RECIPIENT_EMAIL` are set in Render.
+- Make sure you're using a Gmail **App Password**, not your regular password.
+- Check Render logs for email errors: Dashboard → Logs tab → Look for "Error sending email".
 
 ---
 
