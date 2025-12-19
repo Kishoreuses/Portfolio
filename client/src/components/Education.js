@@ -49,18 +49,18 @@ const Education = () => {
   };
   const deduped = [];
   const seen = new Set();
-  const hscSeen = new Set();
+  let hscFound = false;
 
   education.forEach((edu) => {
     const degreeName = normalize(edu.degree);
     const institutionName = normalize(edu.institution);
 
-    // Special handling for HSC duplicates - only keep one HSC entry
+    // Special handling for HSC duplicates - only keep the FIRST HSC entry found
     if (degreeName.includes('hsc')) {
-      if (hscSeen.has(institutionName)) {
-        return; // Skip duplicate HSC entries
+      if (hscFound) {
+        return; // Skip any additional HSC entries
       }
-      hscSeen.add(institutionName);
+      hscFound = true;
     }
 
     const key = `${degreeName}|${institutionName}`;
