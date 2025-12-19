@@ -12,6 +12,12 @@ To fix the `MODULE_NOT_FOUND` error, update your Render service settings:
 | **Build Command** | `npm install` |
 | **Start Command** | `node server/index.js` (or `npm start`) |
 
+### 🔍 How to Verify Render is Working
+Before checking Vercel, open your Render URL in the browser:
+`https://your-backend-render-url.onrender.com/api/health`
+
+If it shows `{"status":"ok",...}`, your backend is ready. If it fails, check your **Root Directory** setting again.
+
 ### Environment Variables on Render
 Add these to your Render Dashboard under the **Environment** tab:
 - `MONGODB_URI`: *Your MongoDB connection string*
