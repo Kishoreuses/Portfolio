@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import api from '../services/api';
+import api, { BASE_URL } from '../services/api';
 import { fallbackCertifications } from '../data/fallback';
 
 const Certifications = () => {
@@ -109,7 +109,7 @@ const Certifications = () => {
             {certifications.map((cert, i) => (
               <article key={cert._id || i} className="cert-card card shadow-sm">
                 <img
-                  src={cert.image?.startsWith('http') ? cert.image : `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}${cert.image}`}
+                  src={cert.image?.startsWith('http') ? cert.image : `${BASE_URL}${cert.image}`}
                   alt={`${cert.title} certificate`}
                   onClick={() => handleImageClick(cert)}
                   style={{ cursor: 'zoom-in' }}
@@ -123,7 +123,7 @@ const Certifications = () => {
             {certifications.map((cert, i) => (
               <article key={`dup-${cert._id || i}`} className="cert-card card shadow-sm">
                 <img
-                  src={cert.image?.startsWith('http') ? cert.image : `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}${cert.image}`}
+                  src={cert.image?.startsWith('http') ? cert.image : `${BASE_URL}${cert.image}`}
                   alt={`${cert.title} certificate`}
                   onClick={() => handleImageClick(cert)}
                   style={{ cursor: 'zoom-in' }}
@@ -150,7 +150,7 @@ const Certifications = () => {
               ×
             </button>
             <img
-              src={activeCert.image?.startsWith('http') ? activeCert.image : `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}${activeCert.image}`}
+              src={activeCert.image?.startsWith('http') ? activeCert.image : `${BASE_URL}${activeCert.image}`}
               alt={`${activeCert.title} full certificate`}
               className="cert-modal-image"
             />

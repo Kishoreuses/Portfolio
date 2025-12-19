@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import api from '../services/api';
+import api, { BASE_URL } from '../services/api';
 import { fallbackInterests } from '../data/fallback';
 
 const Interests = () => {
@@ -34,7 +34,7 @@ const Interests = () => {
         {interests.map((interest) => (
           <article key={interest._id} className="interest-card">
             <img
-              src={interest.image?.startsWith('http') ? interest.image : `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}${interest.image}`}
+              src={interest.image?.startsWith('http') ? interest.image : `${BASE_URL}${interest.image}`}
               alt={interest.title}
             />
             <div className="interest-body">

@@ -1,6 +1,8 @@
 import axios from 'axios';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const BASE_URL = API_URL.replace('/api', '');
+
 const authHeaders = () => {
   const token = localStorage.getItem('token');
   return token ? { Authorization: `Bearer ${token}` } : {};
@@ -66,5 +68,6 @@ const api = {
   deleteResume: (id) => axios.delete(`${API_URL}/resume/${id}`, { headers: authHeaders() }).then(res => res.data),
 };
 
+export { API_URL, BASE_URL };
 export default api;
 

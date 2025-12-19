@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import api from '../services/api';
+import api, { BASE_URL } from '../services/api';
 import { fallbackEducation } from '../data/fallback';
 
 const Education = () => {
@@ -44,7 +44,7 @@ const Education = () => {
   const getFullUrl = (url) => {
     if (!url) return null;
     if (url.startsWith('http')) return url;
-    const baseUrl = (process.env.REACT_APP_API_URL || 'http://localhost:5000').replace('/api', '');
+    const baseUrl = BASE_URL;
     return `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
   };
   const deduped = [];

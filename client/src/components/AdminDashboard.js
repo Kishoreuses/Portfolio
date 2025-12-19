@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../services/api';
+import api, { BASE_URL } from '../services/api';
 import Toast from './Toast';
 
 const SectionCard = ({ title, children }) => (
@@ -79,7 +79,7 @@ const AdminDashboard = ({ profile: initialProfile, refreshProfile }) => {
         setProfile(profileData);
         refreshProfile(profileData);
         if (profileData.photo) {
-          setProfileImagePreview(profileData.photo.startsWith('http') ? profileData.photo : `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}${profileData.photo}`);
+          setProfileImagePreview(profileData.photo.startsWith('http') ? profileData.photo : `${BASE_URL}${profileData.photo}`);
         }
       }
     } catch (err) {
@@ -148,7 +148,7 @@ const AdminDashboard = ({ profile: initialProfile, refreshProfile }) => {
       setProfileImage(null);
       // Update preview based on new data
       if (updated.photo) {
-        setProfileImagePreview(updated.photo.startsWith('http') ? updated.photo : `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}${updated.photo}`);
+        setProfileImagePreview(updated.photo.startsWith('http') ? updated.photo : `${BASE_URL}${updated.photo}`);
       } else {
         setProfileImagePreview(null);
       }
@@ -1031,7 +1031,7 @@ const AdminDashboard = ({ profile: initialProfile, refreshProfile }) => {
                 {(interest.image || interest.imagePreview) && (
                   <div className="mb-3 text-center">
                     <img
-                      src={interest.imagePreview || (interest.image?.startsWith('http') ? interest.image : `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}${interest.image}`)}
+                      src={interest.imagePreview || (interest.image?.startsWith('http') ? interest.image : `${BASE_URL}${interest.image}`)}
                       alt={interest.title}
                       style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: '8px', border: '1px solid var(--border)' }}
                     />
@@ -1266,7 +1266,7 @@ const AdminDashboard = ({ profile: initialProfile, refreshProfile }) => {
                 {(cert.image || cert.imagePreview) && (
                   <div className="mb-3 text-center">
                     <img
-                      src={cert.imagePreview || (cert.image?.startsWith('http') ? cert.image : `${process.env.REACT_APP_API_URL || 'http://localhost:5000'}${cert.image}`)}
+                      src={cert.imagePreview || (cert.image?.startsWith('http') ? cert.image : `${BASE_URL}${cert.image}`)}
                       alt={cert.title}
                       style={{ maxWidth: '100%', maxHeight: '300px', borderRadius: '8px', border: '1px solid var(--border)' }}
                     />
@@ -1683,7 +1683,7 @@ const AdminDashboard = ({ profile: initialProfile, refreshProfile }) => {
                     </p>
                     <div className="d-flex gap-2">
                       <a
-                        href={`${process.env.REACT_APP_API_URL || 'http://localhost:5000'}${resume.path}`}
+                        href={`${BASE_URL}${resume.path}`}
                         target="_blank"
                         rel="noreferrer"
                         className="btn btn-primary"

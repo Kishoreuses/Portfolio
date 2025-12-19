@@ -30,7 +30,7 @@ const AdminLogin = () => {
       let errorMessage = 'Login failed. Please check your credentials.';
 
       if (err.code === 'ERR_NETWORK' || err.message === 'Network Error') {
-        errorMessage = 'Network Error: Cannot connect to server. Please make sure the server is running on http://localhost:5000';
+        errorMessage = 'Network Error: Cannot connect to server. Please ensure the backend is running and the API URL is correctly configured.';
       } else if (err.response) {
         // Server responded with error
         errorMessage = err.response.data?.error || `Server error: ${err.response.status}`;

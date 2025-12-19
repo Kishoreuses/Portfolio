@@ -15,9 +15,9 @@ To fix the `MODULE_NOT_FOUND` error, update your Render service settings:
 ### Environment Variables on Render
 Add these to your Render Dashboard under the **Environment** tab:
 - `MONGODB_URI`: *Your MongoDB connection string*
+- `JWT_SECRET`: *Your secret key* (Keep this private)
+- `FRONTEND_URL`: `https://kishoreportfolio-fawn.vercel.app`
 - `PORT`: `5000`
-- `FRONTEND_URL`: `https://your-portfolio-vercel-url.vercel.app` (The URL of your Vercel deployment)
-- `JWT_SECRET`: *Your secret key*
 
 ---
 
@@ -26,6 +26,9 @@ Add these to your Render Dashboard under the **Environment** tab:
 ### Environment Variables on Vercel
 Add this to your Vercel Project Settings under **Environment Variables**:
 - `REACT_APP_API_URL`: `https://your-backend-render-url.onrender.com/api`
+
+> [!TIP]
+> After setting `REACT_APP_API_URL`, Vercel will automatically redeploy (or you should trigger a new deployment) to apply the change. Once applied, your portfolio will connect to the live backend instead of `localhost`.
 
 ---
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { API_URL, BASE_URL } from '../services/api';
 
 const Hero = ({ profile }) => {
   if (!profile) {
@@ -18,7 +19,7 @@ const Hero = ({ profile }) => {
           <h1>{profile.name}</h1>
           <p className="subtitle">{profile.subtitle}</p>
           <div className="hero-actions">
-            <a className="btn primary" href={`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/resume/download`} target="_blank" rel="noopener noreferrer">Resume</a>
+            <a className="btn primary" href={`${API_URL}/resume/download`} target="_blank" rel="noopener noreferrer">Resume</a>
             <a className="btn ghost" href="#contact">Contact Me</a>
           </div>
           <div className="hero-meta">
@@ -50,7 +51,7 @@ const Hero = ({ profile }) => {
         </div>
         <figure className="hero-photo">
           <img
-            src={profile.photo?.startsWith('http') ? profile.photo : `${(process.env.REACT_APP_API_URL || 'http://localhost:5000').replace('/api', '')}${profile.photo}`}
+            src={profile.photo?.startsWith('http') ? profile.photo : `${BASE_URL}${profile.photo}`}
             alt={`Portrait of ${profile.name}`}
           />
         </figure>
