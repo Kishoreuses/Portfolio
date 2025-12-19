@@ -6,7 +6,7 @@ const nodemailer = require('nodemailer');
 const path = require('path');
 const fs = require('fs');
 
-// Create nodemailer transporter
+// Create nodemailer transporter for local development
 const createTransporter = () => {
   return nodemailer.createTransport({
     service: 'gmail',
@@ -15,6 +15,37 @@ const createTransporter = () => {
       pass: process.env.EMAIL_PASSWORD
     }
   });
+};
+
+// Send email using Resend API (recommended for production)
+const sendEmailViaResend = async (mailOptions) => {
+  const RESEND_API_KEY = process.env.RESEND_API_KEY;
+
+  if (!RESEND_API_KEY) {
+    throw new Error('RESEND_API_KEY not configured');
+  }
+
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${RESEND_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
+      to: [mailOptions.to],
+      reply_to: mailOptions.replyTo,
+      subject: mailOptions.subject,
+      html: mailOptions.html
+    })
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Resend API error: ${error}`);
+  }
+
+  return await response.json();
 };
 
 // Submit contact form with file attachments
@@ -40,7 +71,6 @@ router.post('/', contactUpload.array('attachments', 5), async (req, res) => {
 
     // Send email with attachments
     try {
-      const transporter = createTransporter();
       const recipientEmail = process.env.RECIPIENT_EMAIL || process.env.EMAIL_USER;
 
       const mailOptions = {
@@ -82,8 +112,17 @@ router.post('/', contactUpload.array('attachments', 5), async (req, res) => {
         }))
       };
 
-      await transporter.sendMail(mailOptions);
-      console.log('Contact email sent successfully');
+      // Try Resend API first (works on Render), fallback to SMTP
+      if (process.env.RESEND_API_KEY) {
+        console.log('Attempting to send email via Resend API...');
+        await sendEmailViaResend(mailOptions);
+        console.log('Email sent successfully via Resend API');
+      } else {
+        console.log('Attempting to send email via SMTP (Gmail)...');
+        const transporter = createTransporter();
+        await transporter.sendMail(mailOptions);
+        console.log('Email sent successfully via SMTP');
+      }
     } catch (emailError) {
       console.error('Error sending email:', emailError);
       // Don't fail the request if email fails, just log it
