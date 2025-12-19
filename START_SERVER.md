@@ -22,10 +22,11 @@ MONGODB_URI=your_mongodb_atlas_connection_string
 PORT=5000
 ```
 
-### 3. Install Dependencies (if not already done)
+### 3. Install Dependencies
 ```bash
 npm install
 ```
+*Note: This will install both server and client dependencies.*
 
 ### 4. Start the Server
 ```bash
